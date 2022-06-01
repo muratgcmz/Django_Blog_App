@@ -36,4 +36,24 @@ def post_update(request, id):
     
     return render(request, 'blog/post_update.html', context)
 
+
+def post_delete(request, id):
+    post = Post.objects.get(id=id)
+    if request.POST :
+        post.delete()
+        return redirect('home')
+    context = {
+        'post': post
+    }
+    
+    return render(request, 'blog/post_delete.html', context)
+
+def post_details(request, id):
+    post = Post.objects.get(id=id)
+    
+    context = {
+        'post': post
+    }
+    
+    return render(request, 'blog/post_details.html', context)
     
