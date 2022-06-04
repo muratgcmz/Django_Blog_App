@@ -50,8 +50,8 @@ def register(request):
 @login_required(login_url="/user/login/")
 def profile(request):
     if request.method == 'POST':
-        user_form = UserProfile(request.POST, instance=request.user)
-        update_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        user_form = UserProfileForm(request.POST, instance=request.user)
+        update_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user)
         
     
         if user_form.is_valid() and update_form.is_valid():
@@ -60,6 +60,6 @@ def profile(request):
             messages.success(request, 'Your profile updated successfully.')
             return redirect('home')
     else:
-        user_form = UserProfile(instance=request.user)
-        update_form = UpdateProfileForm(instance=request.user.profile)
+        user_form = UserProfileForm(instance=request.user)
+        update_form = UpdateProfileForm(instance=request.user)
     return render(request, 'user/profile.html', {'user_form': user_form, 'update_form': update_form})

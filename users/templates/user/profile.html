@@ -14,9 +14,10 @@
 
 
 <form action="" method="post" enctype="multipart/form-data">
-    {% csrf_token %} 
-    {{ user_form | crispy }}
+    {% csrf_token %}
     {{ update_form | crispy }}
+    {{ user_form | crispy }}
+    
     <button type="submit" class="btn btn-danger">Update</button>
     <hr>
     
