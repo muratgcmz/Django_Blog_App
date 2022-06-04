@@ -1,20 +1,27 @@
 {% extends 'blog/base.html' %} 
 {% block content %}
  {% load crispy_forms_tags %}
-<div class="mx-5">
-<img class="rounded-circle account-img" src="{{ user.image.url }}" alt="image" >
+
 <h2>Profile</h2>
+
+{% if request.user.is_authenticated %}
+
+<div class="mx-5">
+<img class="rounded-circle account-img" src="{{ user.profile.image.url }}" alt="image" >
+
 <hr>
 
 
 
 <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %} 
-    {{ form_profile | crispy }}
+    {{ user_form | crispy }}
+    {{ update_form | crispy }}
     <button type="submit" class="btn btn-danger">Update</button>
     <hr>
     
 </form>
+{% endif %}
 
 
 </div>

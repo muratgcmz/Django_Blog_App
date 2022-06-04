@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import logout, login
-from .forms import UserForm, UserProfileForm
+from .forms import UserForm, UserProfileForm, UpdateProfileForm
 from django.contrib.auth.forms import AuthenticationForm
 from .models import UserProfile
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -46,21 +47,19 @@ def register(request):
 
     return render(request, 'user/register.html', context)
 
-
-def profile(request, id):
-    try:
-        userprofile = UserProfile.objects.get(id=id)
-    except:
-        userprofile = None
-    form_profile = UserProfileForm(request.POST or None, request.FILES or None, instance=userprofile)
-    if form_profile.is_valid():
-        profileTemp = form_profile.save()
-        if 'image' in request.FILES:
-            profileTemp.image = request.FILES.get('image')
-            profileTemp.save()
-        return redirect('home')
-    context = {
-        'form_profile': form_profile,
-        'user': userprofile 
-        }
-    return render(request, 'user/profile.html', context)
+@login_required(login_url="/user/login/")
+def profile(request):
+    if request.method == 'POST':
+        user_form = UserProfile(request.POST, instance=request.user)
+        update_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        
+    
+        if user_form.is_valid() and update_form.is_valid():
+            user_form.save()
+            update_form.save()
+            messages.success(request, 'Your profile updated successfully.')
+            return redirect('home')
+    else:
+        user_form = UserProfile(instance=request.user)
+        update_form = UpdateProfileForm(instance=request.user.profile)
+    return render(request, 'user/profile.html', {'user_form': user_form, 'update_form': update_form})
