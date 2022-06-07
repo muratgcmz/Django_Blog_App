@@ -51,7 +51,7 @@ def register(request):
 def profile(request):
     if request.method == 'POST':
         user_form = UserProfileForm(request.POST, instance=request.user)
-        update_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user)
+        update_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
         
     
         if user_form.is_valid() and update_form.is_valid():
@@ -61,5 +61,5 @@ def profile(request):
             return redirect('home')
     else:
         user_form = UserProfileForm(instance=request.user)
-        update_form = UpdateProfileForm(instance=request.user)
+        update_form = UpdateProfileForm(instance=request.user.profile)
     return render(request, 'user/profile.html', {'user_form': user_form, 'update_form': update_form})
